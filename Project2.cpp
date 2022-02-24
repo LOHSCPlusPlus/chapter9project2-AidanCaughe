@@ -53,7 +53,7 @@ int gameCounter = 0;
   }
   return gameCounter;
 }
-
+//Printing the data out
 void printVGData(videoGame gameList, int entrynum){
   cout << "Game Number " << entrynum << endl;
   cout << "Name: " << gameList.name << endl;
@@ -63,6 +63,81 @@ void printVGData(videoGame gameList, int entrynum){
   cout << "Developer: " << gameList.developer << endl;
   cout << "Publisher: " << gameList.publisher << endl;
   cout << endl;
+}
+
+//Integer Check
+int readInt(const char prompt[]){
+    int temp = 0;
+    cout << prompt;
+    cin >> temp;
+    while (!cin) {
+        cin.clear();
+        cin.ignore(1000,'\n');
+        cout << "Invalid Data!" << endl;
+        cout << prompt;
+        cin >> temp;
+    }
+    return temp;
+}
+//Adding Entry to Database
+void addEntry(videoGame gameList[], int listSize){
+  //If database full
+  bool GameReal = false;
+  //Checking for valid entry
+  for (int index = 0; index < MAX_VG; index++){
+    if(strcmp(gameList[index].name,"")==0){
+        cout << "Entering information for Game #" << index << endl;
+  cout << "Enter Name: ";
+  cin.ignore(100,'\n');
+  cin.getline(gameList[index].name, listSize);
+  //Int Checker
+  gameList[index].sales = readInt("Enter sales: ");
+  cout << "Enter Platforms (if multiple, type Multi-platform): ";
+  cin.ignore(100,'\n');
+  cin.getline(gameList[index].platform, listSize);
+  cout << "Enter Release Date in this format (example: January 1, 2005): ";
+  cin.getline(gameList[index].release, listSize);
+  cout << "Enter Developer: ";
+  cin.getline(gameList[index].developer, listSize);
+  cout << "Enter Publisher: ";
+  cin.getline(gameList[index].publisher, listSize);
+  cout << endl;
+  GameReal = true;
+  break;
+    }
+    }
+  if (GameReal == false){
+    cout << "The database is full." << endl;
+    cout << endl;
+  }
+  }
+  
+ 
+int removeEntry(videoGame gameList[],int newSize){
+  int removeIndex = 0;
+  cout << "Remove entry between 0 and " << newSize-1 << endl;
+  cin >> removeIndex;
+  if (removeIndex >= 0 && removeIndex <= newSize-1){
+  for (int deleteIndex = removeIndex; deleteIndex < newSize; deleteIndex++){
+  gameList[deleteIndex] = gameList[deleteIndex + 1];
+  }
+    //New Size being made
+    newSize--;
+    }
+  else {
+    cout << "Invalid Entry." << endl;
+    cout << endl;
+  }
+  return newSize;
+}
+//Reloading the file
+int reloadFile(videoGame gameList[], int oldSize){
+  ifstream gameFile("videogames.txt");
+  int newSize=readVideoGame(gameFile,gameList);
+  oldSize = newSize;
+  cout << "Database successfully reloaded." << endl;
+  cout << endl;
+  return oldSize;
 }
 
 int main(){
@@ -88,13 +163,32 @@ int main(){
     cout << "10. Reset file back to original file" << endl;
     cin >> choice;
     cout << endl;
+    //Reload from file
+    if (choice==1){
+      counter = reloadFile(gameList,counter);
+    }
     //Print Videogame
     if (choice==2){
       int VGChoice = 0;
       cout << "Enter a videogame entry between 0 and " << counter-1 << ": ";
       cin >> VGChoice;
       cout << endl;
+      if (VGChoice <= counter-1 && VGChoice >=0){
       printVGData(gameList[VGChoice], VGChoice);
+        }
+      else{
+        cout << "Invalid Entry." << endl;
+        cout << endl;
+      }
     }
+    //adding game
+    if (choice==3){
+      addEntry(gameList,counter);
+      //adding one more to the possible list in the database
+      counter++;
+    }
+    if (choice==4){
+      counter = removeEntry(gameList,counter);
+    }  
   }
 }
