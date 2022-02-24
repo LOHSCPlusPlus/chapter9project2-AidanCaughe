@@ -65,6 +65,14 @@ void printVGData(videoGame gameList, int entrynum){
   cout << endl;
 }
 
+void printByPublisher(videoGame *gameList, char userPublisher[]){
+  for (int i = 0; i < MAX_VG;i++){
+    if (strcmp(gameList[i].publisher,userPublisher)==0){
+      printVGData(gameList[i], i);
+    }
+  }
+}
+
 //Integer Check
 int readInt(const char prompt[]){
     int temp = 0;
@@ -168,7 +176,7 @@ int main(){
       counter = reloadFile(gameList,counter);
     }
     //Print Videogame
-    if (choice==2){
+    else if (choice==2){
       int VGChoice = 0;
       cout << "Enter a videogame entry between 0 and " << counter-1 << ": ";
       cin >> VGChoice;
@@ -182,13 +190,19 @@ int main(){
       }
     }
     //adding game
-    if (choice==3){
+    else if (choice==3){
       addEntry(gameList,counter);
       //adding one more to the possible list in the database
       counter++;
     }
-    if (choice==4){
+    else if (choice==4){
       counter = removeEntry(gameList,counter);
-    }  
+    }
+    else if (choice==5){
+      char userPublisher[100];
+      cout << "Enter a publisher (Examples: Nintendo, Rockstar Games, Activision): ";
+        cin >> userPublisher;
+      printByPublisher(gameList, userPublisher);
+    }
   }
 }
