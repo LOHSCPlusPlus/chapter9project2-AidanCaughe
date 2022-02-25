@@ -148,9 +148,34 @@ int reloadFile(videoGame gameList[], int oldSize){
   return oldSize;
 }
 
+//Database to File
+void saveDatabase(const char fileName[],videoGame gameList[],int size){
+  ofstream outFile(fileName);
+  //Printing to File
+  for (int i = 0; i < size; i++){
+    outFile << gameList[i].name << ";";
+    outFile << gameList[i].sales << ";";
+    outFile << gameList[i].platform << ";";
+    outFile << gameList[i].release << ";";
+    outFile << gameList[i].developer << ";";
+    outFile << gameList[i].publisher << endl;
+  }
+  cout << "Database saved.";
+  cout << endl;
+}
+//File Reset
+int resetFile(ifstream &fileName,videoGame gameList[], int size){
+  size = readVideoGame(fileName,gameList);
+  saveDatabase("videogames.txt",gameList,size);
+  cout << "Database hard resetted. ";
+  cout << endl;
+    return size;
+}
+
 int main(){
  videoGame gameList[MAX_VG];
   ifstream GameFile("videogames.txt");
+  ifstream MasterFile("videogames0.txt");
   int counter = readVideoGame(GameFile, gameList);
   int choice = 0;
   //Menu
@@ -203,6 +228,14 @@ int main(){
       cout << "Enter a publisher (Examples: Nintendo, Rockstar Games, Activision): ";
         cin >> userPublisher;
       printByPublisher(gameList, userPublisher);
+    }
+    //Saving to file
+    else if (choice==6){
+      saveDatabase("videogames.txt",gameList,counter);
+    }
+    //Hard Reset
+    else if (choice==10){
+      resetFile(MasterFile,gameList,counter);
     }
   }
 }
