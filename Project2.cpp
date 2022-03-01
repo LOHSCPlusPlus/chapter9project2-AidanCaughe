@@ -163,19 +163,10 @@ void saveDatabase(const char fileName[],videoGame gameList[],int size){
   cout << "Database saved.";
   cout << endl;
 }
-//File Reset
-int resetFile(ifstream &fileName,videoGame gameList[], int size){
-  size = readVideoGame(fileName,gameList);
-  saveDatabase("videogames.txt",gameList,size);
-  cout << "Database hard resetted. ";
-  cout << endl;
-    return size;
-}
 
 int main(){
  videoGame gameList[MAX_VG];
   ifstream GameFile("videogames.txt");
-  ifstream MasterFile("videogames0.txt");
   int counter = readVideoGame(GameFile, gameList);
   int choice = 0;
   //Menu
@@ -183,17 +174,13 @@ int main(){
     cout << "Welcome to the Videogame Database" << endl;
     cout << "Please enter an input (1-7): " << endl;
     cout << "1. Reload the database from file" << endl;
-    cout << "2. Print database entry" << endl;
+    cout << "2. Print database" << endl;
     cout << "3. Add new entry" << endl;
     cout << "4. Remove entry" << endl;
     cout << "5. Print all videogames by publisher" << endl;
     cout << "6. Save database to file" << endl;
     cout << "7. Quit" << endl;
-    cout << endl;
-    cout << endl;
     //Hard Reset
-    cout << "CAUTION: " << endl;
-    cout << "10. Reset file back to original file" << endl;
     cin >> choice;
     cout << endl;
     //Reload from file
@@ -202,17 +189,9 @@ int main(){
     }
     //Print Videogame
     else if (choice==2){
-      int VGChoice = 0;
-      cout << "Enter a videogame entry between 0 and " << counter-1 << ": ";
-      cin >> VGChoice;
-      cout << endl;
-      if (VGChoice <= counter-1 && VGChoice >=0){
-      printVGData(gameList[VGChoice], VGChoice);
-        }
-      else{
-        cout << "Invalid Entry." << endl;
-        cout << endl;
-      }
+    for(int i = 0; i < counter; i++){
+     printVGData(gameList[i],i); 
+    }
     }
     //adding game
     else if (choice==3){
@@ -232,10 +211,6 @@ int main(){
     //Saving to file
     else if (choice==6){
       saveDatabase("videogames.txt",gameList,counter);
-    }
-    //Hard Reset
-    else if (choice==10){
-      resetFile(MasterFile,gameList,counter);
     }
   }
 }
