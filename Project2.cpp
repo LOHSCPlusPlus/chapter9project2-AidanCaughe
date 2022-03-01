@@ -15,7 +15,7 @@ struct videoGame
   videoGame();
 };
 const int MAX_VG=100;
-//Constructor
+//Default Constructor
 videoGame::videoGame(){
   for (int i = 0; i < MAX_CHAR_LEN; i++){
   name[i] = '\0';
@@ -26,7 +26,7 @@ videoGame::videoGame(){
   }
   sales = 0;
 }
-//Reading in the video game
+//Reading in the video game to the database (singular)
 videoGame readVG(ifstream &inFile){
   videoGame VG;
     inFile.get(VG.name, videoGame::MAX_CHAR_LEN,';');
@@ -44,7 +44,7 @@ videoGame readVG(ifstream &inFile){
     return VG;
   }
 
-//Reading VideoGame data
+//Reading VideoGame data (multiple)
 int readVideoGame(ifstream &inFile, videoGame gameList[]){
 int gameCounter = 0;
   while(inFile.peek()!=EOF && gameCounter<MAX_VG){
@@ -53,7 +53,7 @@ int gameCounter = 0;
   }
   return gameCounter;
 }
-//Printing the data out
+//Printing the database out
 void printVGData(videoGame gameList, int entrynum){
   cout << "Game Number " << entrynum << endl;
   cout << "Name: " << gameList.name << endl;
@@ -65,6 +65,7 @@ void printVGData(videoGame gameList, int entrynum){
   cout << endl;
 }
 
+//Printing by publisher
 void printByPublisher(videoGame *gameList, char userPublisher[]){
   for (int i = 0; i < MAX_VG;i++){
     if (strcmp(gameList[i].publisher,userPublisher)==0){
@@ -73,7 +74,7 @@ void printByPublisher(videoGame *gameList, char userPublisher[]){
   }
 }
 
-//Integer Check
+//Integer Check (for sales)
 int readInt(const char prompt[]){
     int temp = 0;
     cout << prompt;
@@ -110,17 +111,19 @@ void addEntry(videoGame gameList[], int listSize){
   cout << "Enter Publisher: ";
   cin.getline(gameList[index].publisher, listSize);
   cout << endl;
+  //Setting it to make the game true
   GameReal = true;
   break;
     }
     }
+  //Checking if gamereal is still false
   if (GameReal == false){
     cout << "The database is full." << endl;
     cout << endl;
   }
   }
   
- 
+//Removing entry from database 
 int removeEntry(videoGame gameList[],int newSize){
   int removeIndex = 0;
   cout << "Remove entry between 0 and " << newSize-1 << endl;
@@ -132,6 +135,7 @@ int removeEntry(videoGame gameList[],int newSize){
     //New Size being made
     newSize--;
     }
+  //Invalid entry
   else {
     cout << "Invalid Entry." << endl;
     cout << endl;
@@ -163,10 +167,12 @@ void saveDatabase(const char fileName[],videoGame gameList[],int size){
   cout << "Database saved.";
   cout << endl;
 }
-
+//Main
 int main(){
  videoGame gameList[MAX_VG];
+  //Text file we'll be using
   ifstream GameFile("videogames.txt");
+  //Setting counter/size 
   int counter = readVideoGame(GameFile, gameList);
   int choice = 0;
   //Menu
@@ -199,9 +205,11 @@ int main(){
       //adding one more to the possible list in the database
       counter++;
     }
+    //Removing entry
     else if (choice==4){
       counter = removeEntry(gameList,counter);
     }
+    //Publisher printer
     else if (choice==5){
       char userPublisher[100];
       cout << "Enter a publisher (Examples: Nintendo, Rockstar Games, Activision): ";
